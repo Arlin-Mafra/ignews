@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { SubscribleButton } from "../components/SubscribleButton";
 import Head from "next/head";
 
@@ -20,7 +20,7 @@ export default function Home({ product }: HomeProps) {
       </Head>
       <main className={styles.contentContainer}>
         <section className={styles.hero}>
-          <span>Hey, welcome</span>
+          <span>👏 Hey, welcome</span>
           <h1>
             News about the <span>React</span> world
           </h1>
@@ -37,19 +37,20 @@ export default function Home({ product }: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const price = await stripe.prices.retrieve("price_1LFiUyHTfvyPUkj49gTjfz9j");
   const product = {
     priceId: price.id,
     amount: Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(price.unit_amount / 100),
+    }).format(Number(price.unit_amount) / 100),
   };
 
   return {
     props: {
       product,
     },
+    revalidate: 60 * 60 * 24,
   };
 };
