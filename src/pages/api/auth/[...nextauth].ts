@@ -27,8 +27,17 @@ export default NextAuth({
   callbacks: {
     async signIn({ user, account, profile }: signInProps) {
       const { email } = user;
-      await fauna.query(q.Create(q.Collection("users"), { data: { email } }));
-      return true;
+      try {
+        if (!user) {
+          await fauna.query(
+            q.Create(q.Collection("users"), { data: { email } })
+          );
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     },
   },
 });
