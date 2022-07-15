@@ -40,7 +40,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           },
         })
       );
-      console.log("Customer: ", customerId);
 
       customerId = stripeCustomer.id;
     }
